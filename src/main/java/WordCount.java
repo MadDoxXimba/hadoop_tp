@@ -58,12 +58,12 @@ public class WordCount {
         
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        //-Dinput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/hamlet.txt -Doutput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/output.txt
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        // FileInputFormat.addInputPath(job, new Path("/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/hamlet.txt"));
-        // FileOutputFormat.setOutputPath(job, new Path("/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/output"));
-        
+        // -Dinput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/hamlet.txt -Doutput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/output.txt
+        String inputPath = args[0].replace("-Dinput=","");
+        String outputPath = args[1].replace("-Doutput=","");
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
+
         job.waitForCompletion(true);
         
 
