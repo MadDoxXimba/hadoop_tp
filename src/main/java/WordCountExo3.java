@@ -12,9 +12,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapred.MapReduceBase;
+import org.apache.hadoop.mapred.OutputCollector;
+import org.apache.hadoop.mapred.Reporter;
 
-/*Exercice 1*/
-public class WordCount {
+/*Exercice 3*/
+public class WordCountExo3 {
     
     
     public static class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {

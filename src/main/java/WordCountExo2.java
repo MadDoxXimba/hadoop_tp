@@ -12,42 +12,63 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapred.OutputCollector;
 
-/*Exercice 1*/
-public class WordCount {
+
+/*Exercice 2*/
+/*
+Conséquences d'utiliser le mapper ou le reduceur est le temps de traitement.
+
+temps traitement mapper > temps traitement reduceur
+
+
+*/
+public class WordCountExo2 {
     
-    
+    /*Modification du mapper pour écrire que les mots commencant par "m"*/
     public static class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
         
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
-            //convertion de la 1ere ligne du fichier en string
+
             String line = value.toString();
-            //convertion de chaque mot du string en token et suppression des mots usuels (ex: a, by, for, etc...)
+           
             StringTokenizer tokenizer = new StringTokenizer(line);
             while (tokenizer.hasMoreTokens()){
-                //selection du prochain mot sur le string
+
                 word.set(tokenizer.nextToken());
-                //distribution des tâches sur différents serveurs du cluster
-                context.write(word, one);
+                //modification sur le mapper
+                
+                if (word.toString().substring(0,1).equals("m")) {
+
+                    context.write(word, one);
+                }
+                
+                //si modification dans le reducer décommenter ici
+                //context.write(word, one);
             }
         }
     }
     
     
-
+    /*Les modifications */
     public static class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-            //opération maths entre chaque couple créer par le mapper
-            int sum = 0;
-            for (IntWritable val : values) {
-                sum += val.get();
-            }
-            //ecriture du fichier résultat sur le cluster
-            context.write(key, new IntWritable(sum));
+            
+            //mettre en commentaire le if  si c'est le mapper qui fait le boulot
+            //if (key.toString().substring(0,1).equals("m")) {
+                
+                int sum = 0;
+                for (IntWritable val : values) {
+                    sum += val.get();
+                }
+
+                context.write(key, new IntWritable(sum));
+                
+           // }
         }
     }
     
