@@ -110,6 +110,6 @@ public class WordCountExo4 {
         Counters all_counters = job.getCounters();
         Counter counterM = all_counters.findCounter(COUNTRY.USA);
         //ICI on fait un print des top 10 pays
-        System.out.println("COUNTRY.USA: Ceci est un compteur custom: "+ counterM.getValue());
+        //System.out.println("COUNTRY.USA: Ceci est un compteur custom: "+ counterM.getValue());
     }
 }
