@@ -1,3 +1,11 @@
+Commandlines sous cloudera:
+
+hadoop jar Desktop/java.jar WordCountExo4 -Dinput=hdfs://127.0.0.1/dataset/20171122.export.CSV -Doutput=hdfs://127.0.0.1/dataset/output/
+
+
+
+
+
 Bases de données avancées
 Big Data: Hadoop/MapReduce
 
