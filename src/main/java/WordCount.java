@@ -12,7 +12,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Set;
+import java.util.Iterator;
 /*Exercice 1*/
 public class WordCount {
     
@@ -40,6 +44,8 @@ public class WordCount {
 
     public static class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         
+        private Map countMap = new HashMap();
+        
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             //opération maths entre chaque couple créer par le mapper
             int sum = 0;
@@ -47,8 +53,11 @@ public class WordCount {
                 sum += val.get();
             }
             //ecriture du fichier résultat sur le cluster
+            // countMap.put(key, new IntWritable(sum));
             context.write(key, new IntWritable(sum));
         }
+        
+      
     }
     
     public static void main(String[] args) throws Exception {

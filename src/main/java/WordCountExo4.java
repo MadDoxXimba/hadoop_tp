@@ -27,7 +27,6 @@ import java.util.Locale;
 public class WordCountExo4 {
     
 
-    /*Modification du mapper pour écrire que les mots commencant par "m"*/
     public static class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         
         private final static IntWritable one = new IntWritable(1);
@@ -41,19 +40,26 @@ public class WordCountExo4 {
             String line = value.toString();
             String[] s = line.split("\t", -1);
 
-            for (String temp: s) {
-
-                word.set(temp);
-                context.write(word, one);
-                  
+            
+            for (int i = 0; i < s.length; i++) {
+                
+                if (i == 7) {
+                    if (s[i].toString().equals("")) {
+                        word.set("UNDEFINED.COUNTRY");
+                        context.write(word, one);
+                    } else {
+                        word.set(s[i].toString());
+                        context.write(word, one);
+                    }
+                }
+                
             }
            
         }
     }
     
     
-    
-    /*Les modifications */
+
     public static class MyReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -64,7 +70,7 @@ public class WordCountExo4 {
                 for (IntWritable val : values) {
                     sum += val.get();
                 }
-                    context.write(key, new IntWritable(sum));
+                context.write(key, new IntWritable(sum));
            
                 
                 
@@ -81,6 +87,7 @@ public class WordCountExo4 {
         
         job.setJarByClass(WordCount.class);
         job.setMapperClass(MyMapper.class);
+        job.setCombinerClass(MyReducer.class);
         job.setReducerClass(MyReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
@@ -88,25 +95,13 @@ public class WordCountExo4 {
         
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        // -Dinput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/hamlet.txt -Doutput=/home/ubuntu/workspace/tp1/formation-bigdata/dataset/wordcount/output.txt
+
         String inputPath = args[0].replace("-Dinput=","");
         String outputPath = args[1].replace("-Doutput=","");
         FileInputFormat.addInputPath(job, new Path(inputPath));
         FileOutputFormat.setOutputPath(job, new Path(outputPath));
 
-        //Exo 3
-        //il faut attendre que le job soit paramétrer avant d'utiliser le counter
         job.waitForCompletion(true);
         
-        
-   
-            
-        //System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"+all_counters.toString()+"hereeee");
-            
-     
-        
-        //Counter counterM = all_counters.findCounter(COUNTRY.USA);
-        //ICI on fait un print des top 10 pays
-        //System.out.println("COUNTRY.USA: Ceci est un compteur custom: "+ counterM.getValue());
     }
 }
