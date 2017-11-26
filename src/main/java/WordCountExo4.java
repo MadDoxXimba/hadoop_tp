@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.*;
 import javax.naming.Context;
 
 
@@ -88,18 +88,58 @@ public class WordCountExo4 {
                 //context.write(key, new IntWritable(sum));
         }
         
+        //ascendant
+        public static <K, V extends Comparable<? super V>> Map<K, V> 
+            sortByValue(Map<K, V> map) {
+            List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
+            Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+                public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                    return (o1.getValue()).compareTo( o2.getValue() );
+                }
+            });
+    
+            Map<K, V> result = new LinkedHashMap<K, V>();
+            for (Map.Entry<K, V> entry : list) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+            return result;
+        }
+        //descendant
+        public static <K, V extends Comparable<V>> Map<K, V> sortByValues(final Map<K, V> map) {
+            Comparator<K> valueComparator =  new Comparator<K>() {
+                public int compare(K k1, K k2) {
+                    int compare = map.get(k2).compareTo(map.get(k1));
+                    if (compare == 0) return 1;
+                    else return compare;
+                }
+            };
+            Map<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
+            sortedByValues.putAll(map);
+            return sortedByValues;
+        }
+        
         public void cleanup(Context context) throws IOException, InterruptedException {
             
         //a faire: sort sur hashmap
+        
 
-        //     Map<String , Integer>  sortedMap = new HashMap<String , Integer>();
-        //     sortedMap = sortMap(map);
+            Map<String , Integer>  sortedMap = new HashMap<String , Integer>();
+            sortedMap = sortByValues(map);
             
-        //   for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
-        //         String key_sorted = entry.getKey();
-        //         Integer value_sorted = entry.getValue();
-        //         context.write(new Text(key_sorted), new IntWritable(value_sorted));
-        //     }
+            
+            //que les top 10
+            int topN = 10;
+            int currentIndex = 0;
+            for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+                
+                if (currentIndex < topN) {
+                    String key_sorted = entry.getKey();
+                    Integer value_sorted = entry.getValue();
+                    context.write(new Text(key_sorted), new IntWritable(value_sorted));
+                    currentIndex++;
+                }
+
+            }
     
     
         }
