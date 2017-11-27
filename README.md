@@ -1,3 +1,10 @@
+Cluster amazon:
+
+ssh -v id02@ec2-34-253-229-16.eu-west-1.compute.amazonaws.com
+
+user: id02
+pass: bigdata02
+
 Commandlines sous cloudera:
 
 hadoop jar Desktop/java.jar WordCountExo4 -Dinput=hdfs://127.0.0.1/dataset/20171122.export.CSV -Doutput=hdfs://127.0.0.1/dataset/output/
