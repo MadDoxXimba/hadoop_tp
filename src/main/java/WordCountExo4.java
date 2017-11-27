@@ -47,7 +47,7 @@ public class WordCountExo4 {
 
     public static class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         
-        private final static IntWritable one = new IntWritable(1);
+        private IntWritable numberOfMentions;
         private Text word = new Text();
 
         
@@ -57,14 +57,16 @@ public class WordCountExo4 {
             
             String line = value.toString();
             String[] s = line.split("\t", -1);
-            
-            if (s[1].toString().equals("") || s[7].toString().equals("")) {
-                word.set("UNDEFINED.COUNTRY");
-                context.write(word, one);
+
+            this.numberOfMentions = new IntWritable(Integer.parseInt(s[27].toString()));
+            if (s[27].toString().equals("") || s[7].toString().equals("")) {
+                // word.set("UNDEFINED.COUNTRY");
+                
+                // context.write(word, numberOfMentions);
             } else {
                  //word.set("Date:"+s[1].toString() + ", Pays:" + s[7].toString());
                  word.set(s[7].toString());
-                 context.write(word, one);
+                 context.write(word, numberOfMentions);
             }
 
         }
@@ -128,7 +130,7 @@ public class WordCountExo4 {
             
             
             //que les top 10
-            int topN = 10;
+            int topN = 20;
             int currentIndex = 0;
             for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
                 
