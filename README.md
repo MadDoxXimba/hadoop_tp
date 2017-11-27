@@ -4,6 +4,8 @@ ssh -v id02@ec2-34-253-229-16.eu-west-1.compute.amazonaws.com
 
 user: id02
 pass: bigdata02
+scp target/java.jar id02@ec2-34-253-229-16.eu-west-1.compute.amazonaws.com:nomfichier.java
+hadoop jar java.jar WordCountExo4 -Dinput=hdfs:///user/hadoop/id02/20171126.export.CSV -Doutput=hdfs:///user/hadoop/id02/result/
 
 Commandlines sous cloudera:
 
